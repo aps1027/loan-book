@@ -22,7 +22,7 @@ const themeColor = "#1976d2";
 const hoverColor = "#1976BE";
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    display: "block",
   },
   appBar: {
     backgroundColor: themeColor,
@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
   content: {
+    display: "block",
     flexGrow: 1,
     padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
@@ -66,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
     zIndex: -1,
+    position: "relative",
     [theme.breakpoints.up("lg")]: {
       zIndex: "auto",
     },

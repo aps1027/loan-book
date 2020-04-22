@@ -67,9 +67,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tableContainer: {
     width: "100%",
-    [theme.breakpoints.down("xs")]: {
-      width: "316px",
-    },
     display: "block",
     margin: theme.spacing(1, 0),
   },

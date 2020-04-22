@@ -75,21 +75,32 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+      margin: theme.spacing(1, 0),
+    },
   },
   input: {
     width: "300px",
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   textarea: {
     width: "616px",
     [theme.breakpoints.down("xs")]: {
-      width: "300px",
+      width: "100%",
     },
   },
   date: {
     width: "300px",
     margin: theme.spacing(0),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   row: {
+    width: "100%",
     padding: theme.spacing(1, 0),
   },
   rowShift: {
@@ -97,9 +108,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tableContainer: {
     width: "100%",
-    [theme.breakpoints.down("xs")]: {
-      width: "316px",
-    },
     display: "block",
     marginBottom: theme.spacing(2),
   },
