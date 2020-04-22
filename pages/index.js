@@ -140,7 +140,7 @@ const Home = () => {
                         {row.interestRate}%
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        {row.totalInstallmentMonths} Ks
+                        {row.totalInstallmentMonths} Mths
                       </StyledTableCell>
                       <StyledTableCell align="right">
                         {row.monthlyPayment} Ks
