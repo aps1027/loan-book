@@ -101,7 +101,7 @@ const Home = () => {
           <Typography variant="h5" noWrap>
             Loan List
           </Typography>
-          {loans ? (
+          {loans && !loans.message ? (
             <TableContainer
               component={Paper}
               className={classes.tableContainer}
