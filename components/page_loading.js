@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   message: {
     margin: "auto",
     textAlign: "center",
-    padding: theme.spacing(4),
+    padding: theme.spacing(4, 0),
     [theme.breakpoints.down("sm")]: {
       width: "100%",
     },
@@ -41,9 +41,7 @@ export default function Welcome() {
   const classes = useStyles();
   return (
     <div className={classes.message}>
-      <Head>
-        Loan Book
-      </Head>
+      <Head>Loan Book</Head>
       <CssBaseline />
       <Typography variant="h2" className={classes.msgHead}>
         Hello!!!

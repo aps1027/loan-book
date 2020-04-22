@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
   },
   loading: {
     display: "block",
-    width: "100%",
     padding: theme.spacing(10),
     zIndex: 3,
     textAlign: "center",
