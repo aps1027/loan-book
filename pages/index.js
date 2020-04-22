@@ -130,7 +130,7 @@ const Home = () => {
                     <StyledTableRow key={index}>
                       <StyledTableCell>{index + 1}</StyledTableCell>
                       <StyledTableCell align="center">
-                        <Link href="/loan/[slug]" as={`/loan/${row._id}`}>
+                        <Link href={`/loan/${row._id}`} prefetch={false}>
                           <a className={classes.anchor}>
                             {row.borrowerInfo.borrower}
                           </a>

@@ -1,6 +1,7 @@
 import React from "react";
 import { CssBaseline, Typography, makeStyles } from "@material-ui/core";
 import Link from "next/link";
+import Head from "next/head";
 
 const themeColor = "#1976d2";
 const hoverColor = "#1976BE";
@@ -40,6 +41,9 @@ export default function Welcome() {
   const classes = useStyles();
   return (
     <div className={classes.message}>
+      <Head>
+        Loan Book
+      </Head>
       <CssBaseline />
       <Typography variant="h2" className={classes.msgHead}>
         Hello!!!
