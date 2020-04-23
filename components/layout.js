@@ -39,8 +39,6 @@ const useStyles = makeStyles((theme) => ({
   },
   drawer: {
     width: drawerWidth,
-    flexShrink: 0,
-    position: "fixed",
   },
   drawerPaper: {
     width: drawerWidth,
@@ -66,14 +64,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: 0,
-    zIndex: -1,
     position: "relative",
-    [theme.breakpoints.up("lg")]: {
-      zIndex: "auto",
-    },
-  },
-  contentShift: {
-    zIndex: 0,
   },
   loading: {
     display: "block",
@@ -179,11 +170,7 @@ export default function Layout(props) {
             </Link>
           </List>
         </Drawer>
-        <main
-          className={clsx(classes.content, {
-            [classes.contentShift]: !open,
-          })}
-        >
+        <main className={classes.content}>
           <div className={classes.drawerHeader} />
           {props.children}
         </main>
