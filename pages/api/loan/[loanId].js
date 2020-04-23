@@ -25,4 +25,29 @@ handler.get(async (req, res) => {
   }
 });
 
+handler.put(async (req, res) => {
+  const {
+    query: { loanId },
+  } = req;
+  const { date, isPaid } = req.body;
+  if (req.isAuthenticated()) {
+    const matchQuery = {
+      _id: ObjectId(loanId),
+      "installmentRecords.dueDate": date,
+    };
+    const newValues = {
+      $set: { "installmentRecords.$.isPaid": isPaid, date: new Date() },
+    };
+    await req.db
+      .collection(loanDBName)
+      .update(matchQuery, newValues, function (err, result) {
+        if (err) throw err;
+        res.json({ message: "OK" });
+      });
+  } else {
+    res.statusCode = 401;
+    res.json({ message: "Unauthorized." });
+  }
+});
+
 export default handler;
