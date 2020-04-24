@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CssBaseline, Typography, makeStyles } from "@material-ui/core";
 import Link from "next/link";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useUser } from "../lib/hooks";
 
 const themeColor = "#1976d2";
 const hoverColor = "#1976BE";
@@ -38,6 +40,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Welcome() {
+  const router = useRouter();
+  const [user] = useUser();
+  useEffect(() => {
+    // redirect to home if user is authenticated
+    if (!user) router.replace("/");
+  }, [user]);
+
   const classes = useStyles();
   return (
     <div className={classes.message}>
