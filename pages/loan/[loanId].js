@@ -60,6 +60,9 @@ const useStyles = makeStyles((theme) => ({
   valueBox: {
     width: "207px",
     padding: theme.spacing(0.5, 1),
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
+    },
   },
   valueStyle: {
     color: themeColor,
