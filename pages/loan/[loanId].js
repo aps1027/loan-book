@@ -17,9 +17,12 @@ import {
   Table,
   TableBody,
   Checkbox,
+  Collapse,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 import moment from "moment";
 
+const loadingCount = process.env.LOADING_COUNT;
 const themeColor = "#1976d2";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +83,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(0.5, 1),
     float: "right",
   },
+  alert: {
+    position: "sticky",
+    top: "70px",
+  },
 }));
 
 const LoanIdPage = (props) => {
@@ -105,6 +112,7 @@ const LoanIdPage = (props) => {
   const [loan] = useLoanToGetById(props.loanUrl);
   const [modifiedDate, setModifiedDate] = React.useState(new Date());
   const [paidStatusObj, setPaidStatusObj] = React.useState({});
+  const [open, setOpen] = React.useState(false);
   const handleChange = async (event, id, date, isPaid) => {
     event.preventDefault();
     const res = await fetch(`/api/loan/${id}`, {
@@ -115,8 +123,12 @@ const LoanIdPage = (props) => {
     if (res.status === 200) {
       let tmpPaidStatusObj = paidStatusObj;
       tmpPaidStatusObj[date] = isPaid;
+      setOpen(true);
       setPaidStatusObj(tmpPaidStatusObj);
       setModifiedDate(new Date());
+      setInterval(function () {
+        setOpen(false);
+      }, loadingCount * 1000);
     }
   };
   useEffect(() => {
@@ -128,6 +140,15 @@ const LoanIdPage = (props) => {
       <Head>
         <title>Loan Detail</title>
       </Head>
+      <Collapse in={open} className={classes.alert}>
+        <Alert
+          onClose={() => {
+            setOpen(false);
+          }}
+        >
+          Already updated Paid Status of Loan.
+        </Alert>
+      </Collapse>
       <div className={classes.root}>
         {!loan || loan.message ? (
           <div>
