@@ -103,6 +103,9 @@ const useStyles = makeStyles((theme) => ({
   },
   btn: {
     color: "white",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+    },
   },
   progress: {
     width: "150px !important",
