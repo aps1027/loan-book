@@ -133,6 +133,7 @@ export default function Layout(props) {
   const routeLink = (link) => {
     router.replace(link);
   };
+  // To logout
   const handleLogout = async () => {
     const res = await fetch("/api/auth", {
       method: "DELETE",
