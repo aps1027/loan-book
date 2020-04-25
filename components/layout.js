@@ -1,5 +1,4 @@
 import React from "react";
-import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,14 +13,12 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import CreateIcon from "@material-ui/icons/Create";
 import HomeIcon from "@material-ui/icons/Home";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Divider, Button, Menu, MenuItem } from "@material-ui/core";
+import { Divider } from "@material-ui/core";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useUser } from "../lib/hooks";
 
 const drawerWidth = 240;
 const themeColor = "#1976d2";
+const hoverColor = "#1976BE";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "block",
@@ -103,47 +100,22 @@ const useStyles = makeStyles((theme) => ({
   },
   btn: {
     color: "white",
+    "&:hover": {
+      backgroundColor: "rgba(0, 0, 0, 0.04)",
+    },
   },
   progress: {
     width: "150px !important",
     height: "150px !important",
   },
-  emptyBox: {
-    flex: " 1 1 auto",
-  },
 }));
 
 export default function Layout(props) {
   const classes = useStyles();
-  const router = useRouter();
-  const [user, { mutate }] = useUser();
   const [open, setOpen] = React.useState(false);
   const handleDrawerOpenOrClose = () => {
     setOpen(!open);
   };
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const routeLink = (link) => {
-    router.replace(link);
-  };
-  const handleLogout = async () => {
-    const res = await fetch("/api/auth", {
-      method: "DELETE",
-    });
-    if (res.status === 204) {
-      // set the user state to null
-      mutate(null);
-      router.replace("/");
-    }
-  };
-
   return (
     <>
       <div className={classes.root}>
@@ -162,41 +134,6 @@ export default function Layout(props) {
             <Typography variant="h6" noWrap>
               Loan Book
             </Typography>
-            <div className={classes.emptyBox}></div>
-            <Button
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              color="primary"
-              onClick={handleClick}
-              className={classes.btn}
-              endIcon={<ExpandMoreIcon />}
-            >
-              {user ? user.name : "loading..."}
-            </Button>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem
-                onClick={(e) => {
-                  handleClose();
-                  routeLink("/signup");
-                }}
-              >
-                Sign up
-              </MenuItem>
-              <MenuItem
-                onClick={(e) => {
-                  handleClose();
-                  handleLogout();
-                }}
-              >
-                Logout
-              </MenuItem>
-            </Menu>
           </Toolbar>
         </AppBar>
         <Drawer
