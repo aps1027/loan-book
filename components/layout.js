@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "500",
   },
   cardContent: {
-    maxHeight: "560px",
+    maxHeight: "500px",
     overflow: "auto",
   },
 }));
@@ -215,8 +215,7 @@ export default function Layout(props) {
     setOpenNoti(!openNoti);
   };
 
-  const onClickNotiDetail = async (event, noti_id, uri, read) => {
-    event.preventDefault();
+  const onClickNotiDetail = async (noti_id, read) => {
     if (!read) {
       const res = await fetch(`/api/noti`, {
         method: "PUT",
@@ -224,7 +223,6 @@ export default function Layout(props) {
         body: JSON.stringify({ notiId: noti_id }),
       });
     }
-    router.replace(uri);
   };
 
   useEffect(() => {
@@ -346,16 +344,15 @@ export default function Layout(props) {
                             <Link href={noti.uri}>
                               <a
                                 className={classes.notiLink}
-                                onClick={(e) =>
+                                onClick={(e) => {
+                                  routeLink(noti.uri);
                                   onClickNotiDetail(
-                                    e,
                                     noti._id,
-                                    noti.uri,
                                     noti.read.some(
                                       (ele) => ele.name === user.name
                                     )
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 Detail
                               </a>
