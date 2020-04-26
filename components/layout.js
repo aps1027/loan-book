@@ -1,5 +1,4 @@
-import React from "react";
-import clsx from "clsx";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -15,10 +14,23 @@ import ListItemText from "@material-ui/core/ListItemText";
 import CreateIcon from "@material-ui/icons/Create";
 import HomeIcon from "@material-ui/icons/Home";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { Divider, Button, Menu, MenuItem } from "@material-ui/core";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import clsx from "clsx";
+import {
+  Divider,
+  Button,
+  Menu,
+  MenuItem,
+  Badge,
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+} from "@material-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useUser } from "../lib/hooks";
+import { useUser, useNotifications } from "../lib/hooks";
+import moment from "moment";
 
 const drawerWidth = 240;
 const themeColor = "#1976d2";
@@ -103,6 +115,7 @@ const useStyles = makeStyles((theme) => ({
   },
   btn: {
     color: "white",
+    textTransform: "none",
     "&:hover": {
       backgroundColor: "rgba(0, 0, 0, 0.04)",
     },
@@ -114,13 +127,63 @@ const useStyles = makeStyles((theme) => ({
   emptyBox: {
     flex: " 1 1 auto",
   },
+  noti: {
+    width: "300px",
+    display: "block",
+    position: "absolute",
+    top: "65px",
+    right: "100px",
+    [theme.breakpoints.down("xs")]: {
+      right: "10px",
+    },
+  },
+  notiHead: {
+    background: themeColor,
+    height: "50px",
+    color: "white",
+  },
+  notiCard: {
+    width: "100%",
+  },
+  notiLink: {
+    color: themeColor,
+    fontSize: "12px",
+    float: "left",
+    textDecoration: "none",
+    "&:hover": {
+      opacity: 0.5,
+    },
+  },
+  notiDate: {
+    float: "right",
+    fontSize: "12px",
+    margin: "0px",
+    fontWeight: "300",
+  },
+  notiDetail: {
+    margin: "0px",
+    fontWeight: "300",
+  },
+  divider: {
+    margin: "10px 0px",
+  },
+  notReadNoti: {
+    fontWeight: "500",
+  },
+  cardContent: {
+    maxHeight: "560px",
+    overflow: "auto",
+  },
 }));
 
 export default function Layout(props) {
   const classes = useStyles();
   const router = useRouter();
   const [user, { mutate }] = useUser();
+  const [notifications] = useNotifications();
   const [open, setOpen] = React.useState(false);
+  const [openNoti, setOpenNoti] = React.useState(false);
+  const [notiCount, setNotiCount] = React.useState(0);
   const handleDrawerOpenOrClose = () => {
     setOpen(!open);
   };
@@ -148,6 +211,43 @@ export default function Layout(props) {
     }
   };
 
+  const onClickNoti = () => {
+    setOpenNoti(!openNoti);
+  };
+
+  const onClickNotiDetail = async (event, noti_id, uri, read) => {
+    event.preventDefault();
+    if (!read) {
+      const res = await fetch(`/api/noti`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notiId: noti_id }),
+      });
+    }
+    router.replace(uri);
+  };
+
+  useEffect(() => {
+    if (notifications) {
+      const notiListToShow = notifications.filter(function (
+        currentValue,
+        index,
+        array
+      ) {
+        if (currentValue.read.length) {
+          return (
+            currentValue.to_read.some(
+              (element) => element.name === user.name
+            ) && currentValue.read.some((ele) => ele.name !== user.name)
+          );
+        } else {
+          return true;
+        }
+      });
+      setNotiCount(notiListToShow.length);
+    }
+  }, [notifications]);
+
   return (
     <>
       <div className={classes.root}>
@@ -167,6 +267,13 @@ export default function Layout(props) {
               Loan Book
             </Typography>
             <div className={classes.emptyBox}></div>
+            <div>
+              <IconButton color="inherit" onClick={onClickNoti}>
+                <Badge badgeContent={notiCount} color="primary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </div>
             <Button
               aria-controls="simple-menu"
               aria-haspopup="true"
@@ -201,6 +308,76 @@ export default function Layout(props) {
                 Logout
               </MenuItem>
             </Menu>
+            {openNoti && (
+              <Card className={classes.noti} id="notiBox">
+                <CardHeader
+                  title="Notifications"
+                  className={classes.notiHead}
+                />
+                <CardContent className={classes.cardContent}>
+                  {notifications && notifications.length ? (
+                    notifications.reverse().map((noti, index) => (
+                      <div key={index}>
+                        <Grid container direction="row">
+                          <Typography variant="h6" noWrap>
+                            {noti.subject}
+                          </Typography>
+                          <Typography
+                            paragraph
+                            className={clsx(classes.notiDetail, {
+                              [classes.notReadNoti]: !noti.read.some(
+                                (ele) => ele.name === user.name
+                              ),
+                            })}
+                          >
+                            {noti.description}
+                          </Typography>
+                          <div className={classes.notiCard}>
+                            <Typography
+                              paragraph
+                              className={clsx(classes.notiDate, {
+                                [classes.notReadNoti]: !noti.read.some(
+                                  (ele) => ele.name === user.name
+                                ),
+                              })}
+                            >
+                              {moment(noti.date).format("DD/MM/YYYY")}
+                            </Typography>
+                            <Link href={noti.uri}>
+                              <a
+                                className={classes.notiLink}
+                                onClick={(e) =>
+                                  onClickNotiDetail(
+                                    e,
+                                    noti._id,
+                                    noti.uri,
+                                    noti.read.some(
+                                      (ele) => ele.name === user.name
+                                    )
+                                  )
+                                }
+                              >
+                                Detail
+                              </a>
+                            </Link>
+                          </div>
+                        </Grid>
+                        <Divider className={classes.divider}></Divider>
+                      </div>
+                    ))
+                  ) : (
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      There is no notifications.
+                    </Grid>
+                  )}
+                </CardContent>
+              </Card>
+            )}
           </Toolbar>
         </AppBar>
         <Drawer

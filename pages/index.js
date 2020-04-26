@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import Head from "next/head";
 import { useUser, useLoans } from "../lib/hooks";
-import Welcome from "../components/page_loading";
+import Welcome from "../components/welcome";
 import Loading from "../components/loading";
 import Link from "next/link";
 
