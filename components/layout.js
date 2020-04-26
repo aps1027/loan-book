@@ -226,7 +226,7 @@ export default function Layout(props) {
   };
 
   useEffect(() => {
-    if (notifications) {
+    if (notifications && user) {
       const notiListToShow = notifications.filter(function (
         currentValue,
         index,
@@ -244,7 +244,7 @@ export default function Layout(props) {
       });
       setNotiCount(notiListToShow.length);
     }
-  }, [notifications]);
+  }, [notifications, user]);
 
   return (
     <>
