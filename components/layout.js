@@ -341,18 +341,18 @@ export default function Layout(props) {
                             >
                               {moment(noti.date).format("DD/MM/YYYY")}
                             </Typography>
-                            <Link href={noti.uri}>
+                            <Link href={noti.uri} prefetch={false}>
                               <a
                                 className={classes.notiLink}
-                                // onClick={(e) => {
-                                //   routeLink(noti.uri);
-                                //   onClickNotiDetail(
-                                //     noti._id,
-                                //     noti.read.some(
-                                //       (ele) => ele.name === user.name
-                                //     )
-                                //   );
-                                // }}
+                                onClick={(e) => {
+                                  routeLink(noti.uri);
+                                  onClickNotiDetail(
+                                    noti._id,
+                                    noti.read.some(
+                                      (ele) => ele.name === user.name
+                                    )
+                                  );
+                                }}
                               >
                                 Detail
                               </a>
