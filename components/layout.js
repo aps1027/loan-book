@@ -344,15 +344,15 @@ export default function Layout(props) {
                             <Link href={noti.uri}>
                               <a
                                 className={classes.notiLink}
-                                onClick={(e) => {
-                                  routeLink(noti.uri);
-                                  onClickNotiDetail(
-                                    noti._id,
-                                    noti.read.some(
-                                      (ele) => ele.name === user.name
-                                    )
-                                  );
-                                }}
+                                // onClick={(e) => {
+                                //   routeLink(noti.uri);
+                                //   onClickNotiDetail(
+                                //     noti._id,
+                                //     noti.read.some(
+                                //       (ele) => ele.name === user.name
+                                //     )
+                                //   );
+                                // }}
                               >
                                 Detail
                               </a>
