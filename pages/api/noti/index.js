@@ -3,6 +3,7 @@ import middleware from "../../../middleware/middleware";
 import { ObjectId } from "mongodb";
 
 const handler = nextConnect();
+// notification collection name
 const notiDBName = process.env.NOTI_COLLECTION_NAME;
 
 handler.use(middleware);
