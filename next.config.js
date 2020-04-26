@@ -6,5 +6,6 @@ module.exports = {
     LOAN_DB_NAME: process.env.LOAN_DB_NAME,
     USER_COLLECTION_NAME : process.env.USER_COLLECTION_NAME,
     LOAN_COLLECTION_NAME: process.env.LOAN_COLLECTION_NAME,
+    NOTI_COLLECTION_NAME: process.env.NOTI_COLLECTION_NAME,
   },
 };

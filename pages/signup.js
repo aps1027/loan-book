@@ -14,7 +14,7 @@ import {
   Button,
 } from "@material-ui/core";
 import Loading from "../components/loading";
-import Welcome from "../components/page_loading";
+import Welcome from "../components/welcome";
 
 const loadingCount = process.env.LOADING_COUNT;
 const themeColor = "#1976d2";
@@ -68,12 +68,6 @@ const SignupPage = () => {
   setInterval(function () {
     setloading(false);
   }, loadingCount * 1000);
-
-  // call whenever user changes (ex. right after signing up successfully)
-  useEffect(() => {
-    // redirect to home if user is authenticated
-    // if (!user) Router.replace("/");
-  }, [user]);
 
   const handleChange = (name) => (event) => {
     if (event.target.value.trim() !== "") {

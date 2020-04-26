@@ -50,7 +50,9 @@ export default function Welcome() {
   const classes = useStyles();
   return (
     <div className={classes.message}>
-      <Head>Loan Book</Head>
+      <Head>
+        <title>Loan Book</title>
+      </Head>
       <CssBaseline />
       <Typography variant="h2" className={classes.msgHead}>
         Hello!!!

@@ -26,7 +26,11 @@ import {
 import DateFnsUtils from "@date-io/date-fns";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useUser } from "../lib/hooks";
+import Loading from "../components/loading";
+import Welcome from "../components/welcome";
 
+const loadingCount = process.env.LOADING_COUNT;
 const themeColor = "#1976d2";
 const hoverColor = "#1976BE";
 const errorList = {
@@ -125,6 +129,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Calculator() {
   const classes = useStyles();
   const router = useRouter();
+  const [user, { mutate }] = useUser();
   const StyledTableCell = withStyles((theme) => ({
     head: {
       backgroundColor: themeColor,
@@ -476,288 +481,303 @@ export default function Calculator() {
       setInstallmentRecords(tmpRecordList);
     }
   }
-  return (
-    <Layout>
-      <Head>
-        <title>Calculator</title>
-      </Head>
-      <div className={classes.calculator}>
-        <Typography variant="h5" noWrap>
-          Loan Calculator
-        </Typography>
-        <form className={classes.root} onSubmit={handleSubmit}>
-          <div className={classes.row}>
-            <FormControl
-              component="fieldset"
-              error={errors.loanAmount}
-              className={classes.formControl}
-            >
-              <TextField
-                className={classes.input}
-                label="Loan Amount"
-                placeholder="Ex. 100000"
-                variant="outlined"
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">Ks</InputAdornment>
-                  ),
-                }}
-                error={errors.loanAmount}
-                onChange={handleChange("loanAmount")}
-              />
-              <FormHelperText>{helperTexts.loanAmount}</FormHelperText>
-            </FormControl>
 
-            <FormControl
-              component="fieldset"
-              error={errors.interestRate}
-              className={classes.formControl}
-            >
-              <TextField
-                className={classes.input}
-                label="Interest Rate"
-                placeholder="Ex. 10"
-                variant="outlined"
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">%</InputAdornment>
-                  ),
-                }}
-                error={errors.interestRate}
-                onChange={handleChange("interestRate")}
-              />
-              <FormHelperText>{helperTexts.interestRate}</FormHelperText>
-            </FormControl>
-            <FormControl
-              component="fieldset"
-              error={errors.totalInstallmentMonths}
-              className={classes.formControl}
-            >
-              <TextField
-                className={classes.input}
-                label="monthly Installment Months"
-                placeholder="Ex. 20"
-                variant="outlined"
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">Mths</InputAdornment>
-                  ),
-                }}
-                error={errors.totalInstallmentMonths}
-                onChange={handleChange("totalInstallmentMonths")}
-              />
-              <FormHelperText>
-                {helperTexts.totalInstallmentMonths}
-              </FormHelperText>
-            </FormControl>
-            <FormControl
-              className={classes.formControl}
-              error={errors.firstInstallmentDate}
-            >
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  className={classes.date}
-                  disableToolbar
-                  variant="inline"
-                  format="dd/MM/yyyy"
-                  margin="normal"
-                  label="First Installment Date"
-                  value={selectedInstallmentDate}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
+  const [loading, setloading] = React.useState(true);
+  setInterval(function () {
+    setloading(false);
+  }, loadingCount * 1000);
+
+  if (user) {
+    return (
+      <Layout>
+        <Head>
+          <title>Calculator</title>
+        </Head>
+        <div className={classes.calculator}>
+          <Typography variant="h5" noWrap>
+            Loan Calculator
+          </Typography>
+          <form className={classes.root} onSubmit={handleSubmit}>
+            <div className={classes.row}>
+              <FormControl
+                component="fieldset"
+                error={errors.loanAmount}
+                className={classes.formControl}
+              >
+                <TextField
+                  className={classes.input}
+                  label="Loan Amount"
+                  placeholder="Ex. 100000"
+                  variant="outlined"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">Ks</InputAdornment>
+                    ),
                   }}
-                  onChange={handleDateChange}
-                  inputVariant="outlined"
-                  error={errors.firstInstallmentDate}
+                  error={errors.loanAmount}
+                  onChange={handleChange("loanAmount")}
                 />
-              </MuiPickersUtilsProvider>
-              <FormHelperText>
-                {helperTexts.firstInstallmentDate}
-              </FormHelperText>
-            </FormControl>
-          </div>
-          <div className={classes.btnBox}>
-            <Button
-              type="submit"
-              size="large"
-              variant="contained"
-              color="primary"
-              className={classes.btn}
+                <FormHelperText>{helperTexts.loanAmount}</FormHelperText>
+              </FormControl>
+
+              <FormControl
+                component="fieldset"
+                error={errors.interestRate}
+                className={classes.formControl}
+              >
+                <TextField
+                  className={classes.input}
+                  label="Interest Rate"
+                  placeholder="Ex. 10"
+                  variant="outlined"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">%</InputAdornment>
+                    ),
+                  }}
+                  error={errors.interestRate}
+                  onChange={handleChange("interestRate")}
+                />
+                <FormHelperText>{helperTexts.interestRate}</FormHelperText>
+              </FormControl>
+              <FormControl
+                component="fieldset"
+                error={errors.totalInstallmentMonths}
+                className={classes.formControl}
+              >
+                <TextField
+                  className={classes.input}
+                  label="monthly Installment Months"
+                  placeholder="Ex. 20"
+                  variant="outlined"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">Mths</InputAdornment>
+                    ),
+                  }}
+                  error={errors.totalInstallmentMonths}
+                  onChange={handleChange("totalInstallmentMonths")}
+                />
+                <FormHelperText>
+                  {helperTexts.totalInstallmentMonths}
+                </FormHelperText>
+              </FormControl>
+              <FormControl
+                className={classes.formControl}
+                error={errors.firstInstallmentDate}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    className={classes.date}
+                    disableToolbar
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    label="First Installment Date"
+                    value={selectedInstallmentDate}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                    onChange={handleDateChange}
+                    inputVariant="outlined"
+                    error={errors.firstInstallmentDate}
+                  />
+                </MuiPickersUtilsProvider>
+                <FormHelperText>
+                  {helperTexts.firstInstallmentDate}
+                </FormHelperText>
+              </FormControl>
+            </div>
+            <div className={classes.btnBox}>
+              <Button
+                type="submit"
+                size="large"
+                variant="contained"
+                color="primary"
+                className={classes.btn}
+              >
+                Calculate
+              </Button>
+            </div>
+            <div
+              className={clsx(classes.row, {
+                [classes.rowShift]: !monthlyPayment,
+              })}
             >
-              Calculate
-            </Button>
-          </div>
-          <div
-            className={clsx(classes.row, {
-              [classes.rowShift]: !monthlyPayment,
+              <FormControl className={classes.formControl}>
+                <TextField
+                  disabled
+                  className={classes.input}
+                  label="Monthly Payment"
+                  variant="outlined"
+                  type="number"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">Ks</InputAdornment>
+                    ),
+                  }}
+                  value={monthlyPayment}
+                />
+              </FormControl>
+            </div>
+          </form>
+          <TableContainer
+            component={Paper}
+            className={clsx(classes.tableContainer, {
+              [classes.tableContainerShift]: !installmentRecords.length,
             })}
           >
-            <FormControl className={classes.formControl}>
-              <TextField
-                disabled
-                className={classes.input}
-                label="Monthly Payment"
-                variant="outlined"
-                type="number"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">Ks</InputAdornment>
-                  ),
-                }}
-                value={monthlyPayment}
-              />
-            </FormControl>
-          </div>
-        </form>
-        <TableContainer
-          component={Paper}
-          className={clsx(classes.tableContainer, {
-            [classes.tableContainerShift]: !installmentRecords.length,
-          })}
-        >
-          <Table aria-label="customized table">
-            <TableHead>
-              <StyledTableRow>
-                <StyledTableCell>No.</StyledTableCell>
-                <StyledTableCell align="center">Due Date</StyledTableCell>
-                <StyledTableCell align="right">Remaining Loan</StyledTableCell>
-                <StyledTableCell align="right">Monthly Payment</StyledTableCell>
-                <StyledTableCell align="right">Interest Amount</StyledTableCell>
-                <StyledTableCell align="right">Total Payment</StyledTableCell>
-              </StyledTableRow>
-            </TableHead>
-            <TableBody>
-              {installmentRecords.map((row, index) => (
-                <StyledTableRow key={index}>
-                  <StyledTableCell component="th" scope="row">
-                    {index + 1}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.dueDate}
+            <Table aria-label="customized table">
+              <TableHead>
+                <StyledTableRow>
+                  <StyledTableCell>No.</StyledTableCell>
+                  <StyledTableCell align="center">Due Date</StyledTableCell>
+                  <StyledTableCell align="right">
+                    Remaining Loan
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.remainingLoan}
+                    Monthly Payment
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {row.monthlyPayment}
+                    Interest Amount
                   </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.interestAmount}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.totalPayment}
-                  </StyledTableCell>
+                  <StyledTableCell align="right">Total Payment</StyledTableCell>
                 </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div
-          className={clsx(classes.btnBox, {
-            [classes.btnBoxShift]: !installmentRecords.length,
-          })}
-        >
-          <Button
-            type="submit"
-            size="large"
-            variant="contained"
-            color="primary"
-            className={classes.btn}
-            onClick={handleClick}
+              </TableHead>
+              <TableBody>
+                {installmentRecords.map((row, index) => (
+                  <StyledTableRow key={index}>
+                    <StyledTableCell component="th" scope="row">
+                      {index + 1}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.dueDate}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.remainingLoan}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.monthlyPayment}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.interestAmount}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.totalPayment}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div
+            className={clsx(classes.btnBox, {
+              [classes.btnBoxShift]: !installmentRecords.length,
+            })}
           >
-            To Save Loan
-          </Button>
-        </div>
-        <form
-          onSubmit={handleSaveSubmit}
-          className={clsx(classes.borrowerInfo, {
-            [classes.borrowerInfoShift]: !openBorrowerInfo,
-          })}
-        >
-          <div className={classes.row}>
-            <FormControl
-              component="fieldset"
-              className={classes.formControl}
-              error={borrowerErrors.borrower}
-            >
-              <TextField
-                className={classes.input}
-                label="Borrower"
-                placeholder="Ex. AungPyaeSone"
-                variant="outlined"
-                type="text"
-                error={borrowerErrors.borrower}
-                onChange={handleBorrowerChange("borrower")}
-              />
-              <FormHelperText>{borrowerHelperTexts.borrower}</FormHelperText>
-            </FormControl>
-
-            <FormControl
-              component="fieldset"
-              className={classes.formControl}
-              error={borrowerErrors.nrcNo}
-            >
-              <TextField
-                className={classes.input}
-                label="NRC Number"
-                placeholder="Ex. 12/MaGaDa(C)123456"
-                variant="outlined"
-                type="text"
-                error={borrowerErrors.nrcNo}
-                onChange={handleBorrowerChange("nrcNo")}
-              />
-              <FormHelperText>{borrowerHelperTexts.nrcNo}</FormHelperText>
-            </FormControl>
-            <FormControl
-              component="fieldset"
-              className={classes.formControl}
-              error={borrowerErrors.phoneNo}
-            >
-              <TextField
-                className={classes.input}
-                label="Phone Number"
-                placeholder="Ex. 09254138466"
-                variant="outlined"
-                type="text"
-                error={borrowerErrors.phoneNo}
-                onChange={handleBorrowerChange("phoneNo")}
-              />
-              <FormHelperText>{borrowerHelperTexts.phoneNo}</FormHelperText>
-            </FormControl>
-            <FormControl
-              component="fieldset"
-              className={classes.formControl}
-              error={borrowerErrors.address}
-            >
-              <TextField
-                className={classes.textarea}
-                label="Address"
-                placeholder="Tawya (6) street, Htauk Kyant, Yangon"
-                multiline
-                rows={3}
-                variant="outlined"
-                error={borrowerErrors.address}
-                onChange={handleBorrowerChange("address")}
-              />
-              <FormHelperText>{borrowerHelperTexts.address}</FormHelperText>
-            </FormControl>
-          </div>
-          <div className={classes.btnBox}>
             <Button
               type="submit"
               size="large"
               variant="contained"
               color="primary"
               className={classes.btn}
+              onClick={handleClick}
             >
-              Save
+              To Save Loan
             </Button>
           </div>
-        </form>
-      </div>
-    </Layout>
-  );
+          <form
+            onSubmit={handleSaveSubmit}
+            className={clsx(classes.borrowerInfo, {
+              [classes.borrowerInfoShift]: !openBorrowerInfo,
+            })}
+          >
+            <div className={classes.row}>
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
+                error={borrowerErrors.borrower}
+              >
+                <TextField
+                  className={classes.input}
+                  label="Borrower"
+                  placeholder="Ex. AungPyaeSone"
+                  variant="outlined"
+                  type="text"
+                  error={borrowerErrors.borrower}
+                  onChange={handleBorrowerChange("borrower")}
+                />
+                <FormHelperText>{borrowerHelperTexts.borrower}</FormHelperText>
+              </FormControl>
+
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
+                error={borrowerErrors.nrcNo}
+              >
+                <TextField
+                  className={classes.input}
+                  label="NRC Number"
+                  placeholder="Ex. 12/MaGaDa(C)123456"
+                  variant="outlined"
+                  type="text"
+                  error={borrowerErrors.nrcNo}
+                  onChange={handleBorrowerChange("nrcNo")}
+                />
+                <FormHelperText>{borrowerHelperTexts.nrcNo}</FormHelperText>
+              </FormControl>
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
+                error={borrowerErrors.phoneNo}
+              >
+                <TextField
+                  className={classes.input}
+                  label="Phone Number"
+                  placeholder="Ex. 09254138466"
+                  variant="outlined"
+                  type="text"
+                  error={borrowerErrors.phoneNo}
+                  onChange={handleBorrowerChange("phoneNo")}
+                />
+                <FormHelperText>{borrowerHelperTexts.phoneNo}</FormHelperText>
+              </FormControl>
+              <FormControl
+                component="fieldset"
+                className={classes.formControl}
+                error={borrowerErrors.address}
+              >
+                <TextField
+                  className={classes.textarea}
+                  label="Address"
+                  placeholder="Tawya (6) street, Htauk Kyant, Yangon"
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                  error={borrowerErrors.address}
+                  onChange={handleBorrowerChange("address")}
+                />
+                <FormHelperText>{borrowerHelperTexts.address}</FormHelperText>
+              </FormControl>
+            </div>
+            <div className={classes.btnBox}>
+              <Button
+                type="submit"
+                size="large"
+                variant="contained"
+                color="primary"
+                className={classes.btn}
+              >
+                Save
+              </Button>
+            </div>
+          </form>
+        </div>
+      </Layout>
+    );
+  }
+  return <>{loading ? <Loading></Loading> : <Welcome></Welcome>}</>;
 }

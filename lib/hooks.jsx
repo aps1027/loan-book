@@ -21,3 +21,10 @@ export function useLoanToGetById(url) {
   const loans = data;
   return [loans];
 }
+
+export function useNotifications() {
+  const { data, error } = useSWR("/api/noti", fetcher);
+  if (error) return [{ message: "Failed to retreive." }];
+  const loans = data;
+  return [loans];
+}
